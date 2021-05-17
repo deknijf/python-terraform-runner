@@ -6,12 +6,12 @@ DEPENDENCIES = [
     'argparse'
 ]
 
-VERSION = '0.1'
+VERSION = '0.2'
 URL = 'https://github.com/deknijf/python-terraform-runner'
 
 setup(
     name='python-terraform-runner',
-    packages=['tf-runner'],
+    #packages=['tf-runner'],
     version=VERSION,
     # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     license='Apache Software License',
@@ -24,6 +24,7 @@ setup(
     # Keywords that define your package best
     keywords=['python', 'terraform', 'slack', 'gitlab'],
     install_requires=DEPENDENCIES,
+    scripts=['bin/terraform-gitlab'],
     classifiers=[
         'Development Status :: 4 - Beta',
 
