@@ -44,14 +44,18 @@ def post_slack(state, workspace, stack, _data, plan_output=None, color="#27d200"
 def parse_plan(data):
     strip1 = data.split(': ')[-1]
     strip2 = strip1.split(", ")
-    for update in strip2:
-        if int(update.split(" ")[0]) > 0:
-            if 'add' in update.split(" ")[-1]:
-                color = "#27d200"  # green
-            elif 'change' in update.split(" ")[-1]:
-                color = "#e0cf24"  # yellow
-            elif 'destroy' in update.split(" ")[-1]:
-                color = "#ec0000"  # red
+    color = "#27d200"  # green
+    try:
+        for update in strip2:
+            if int(update.split(" ")[0]) > 0:
+                if 'add' in update.split(" ")[-1]:
+                    color = "#27d200"  # green
+                elif 'change' in update.split(" ")[-1]:
+                    color = "#e0cf24"  # yellow
+                elif 'destroy' in update.split(" ")[-1]:
+                    color = "#ec0000"  # red
+    except:
+        pass
     return color
 
 
@@ -70,14 +74,14 @@ def tf_plan(tf, workspace_name, stack="", webhook=None, tfvar=False,
             pipeline_url=None, job_url=None, limit=None, author=None):
     if not tfvar:
         return_code, stdout, stderr = tf.plan(
-            out=f"{workspace_name}_{stack}.tfplan")
+            out=f"{workspace_name}.tfplan")
     else:
         return_code, stdout, stderr = tf.plan(
             var_file=f"{workspace_name}.tfvars",
-            out=f"{workspace_name}_{stack}.tfplan")
+            out=f"{workspace_name}.tfplan")
 
     if return_code == 2:
-        print("output - a change is required")
+        #print("output - a change is required")
         print(stdout)
         data_list = stdout.strip().split('\n')
         for line in data_list:
@@ -107,7 +111,7 @@ def tf_apply(tf, workspace_name, stack="", skip_plan=True, webhook=None,
             skip_plan=skip_plan)
     else:
         return_code_apply, stdout_apply, stderr_apply = tf.apply(
-            f"{workspace_name}_{stack}.tfplan",
+            f"{workspace_name}.tfplan",
             var=None,
             skip_plan=skip_plan)
 
