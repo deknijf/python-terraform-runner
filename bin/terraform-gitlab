@@ -7,12 +7,12 @@ import sys
 import argparse
 
 
-def post_slack(state, stack, _data, plan_output=None, color="#27d200", 
+def post_slack(state, workspace, stack, _data, plan_output=None, color="#27d200", 
                webhook=None, pipeline_url=None, job_url=None, limit=4000,
                author=None):
     if state == "plan":
         data = {
-            'text': f"Terraform {state} for stack *{stack}*",
+            'text': f"Terraform {state} for stack *{stack}* ({workspace})",
             'username': 'Terraform',
             'icon_emoji': ':robot_face:',
             "attachments": [
@@ -25,7 +25,7 @@ def post_slack(state, stack, _data, plan_output=None, color="#27d200",
         }
     else:
         data = {
-            'text': f"Terraform {state} for stack *{stack}*",
+            'text': f"Terraform {state} for stack *{stack}* ({workspace})",
             'username': 'Terraform',
             'icon_emoji': ':robot_face:',
             "attachments": [
@@ -85,7 +85,7 @@ def tf_plan(tf, workspace_name, stack="", webhook=None, tfvar=False,
                 plan_out = line
         color = parse_plan(plan_out)
         if webhook is not None:
-            post_slack("plan", stack, stdout, plan_out,
+            post_slack("plan", workspace_name, stack, stdout, plan_out,
                        color, webhook, pipeline_url, job_url, limit, author)
     elif return_code == 1:
         print("ERROR:\n=======\n")
@@ -119,7 +119,7 @@ def tf_apply(tf, workspace_name, stack="", skip_plan=True, webhook=None,
                 plan_out = line
         color = parse_plan(plan_out)
         if webhook is not None:
-            post_slack("apply", stack, stdout_apply, plan_out,
+            post_slack("apply", workspace_name, stack, stdout_apply, plan_out,
                        color, webhook, pipeline_url, job_url, limit, author)
     else:
         print("ERROR:\n=======\n")
