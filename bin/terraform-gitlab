@@ -7,7 +7,7 @@ import sys
 import argparse
 
 
-def post_slack(state, workspace, stack, _data, plan_output=None, color="#27d200", 
+def post_slack(state, workspace, stack, _data, plan_output=None, color="#27d200",
                webhook=None, pipeline_url=None, job_url=None, limit=4000,
                author=None):
     if state == "plan":
@@ -36,7 +36,7 @@ def post_slack(state, workspace, stack, _data, plan_output=None, color="#27d200"
                 }
             ]
         }
-    
+
     requests.post(webhook, data=json.dumps(
         data), headers={'Content-Type': 'application/json'})
 
@@ -60,7 +60,8 @@ def parse_plan(data):
 
 
 def set_tf(workspace_name):
-    tf = Terraform()
+    tf = Terraform(terraform_bin_path="/usr/local/bin/terraform")
+    tf.version()
     tf.init()
     try:
         tf.create_workspace(workspace_name)
@@ -70,7 +71,7 @@ def set_tf(workspace_name):
     return tf
 
 
-def tf_plan(tf, workspace_name, stack="", webhook=None, tfvar=False, 
+def tf_plan(tf, workspace_name, stack="", webhook=None, tfvar=False,
             pipeline_url=None, job_url=None, limit=None, author=None):
     if not tfvar:
         return_code, stdout, stderr = tf.plan(
@@ -102,7 +103,7 @@ def tf_plan(tf, workspace_name, stack="", webhook=None, tfvar=False,
         print("something else ...")
 
 
-def tf_apply(tf, workspace_name, stack="", skip_plan=True, webhook=None, 
+def tf_apply(tf, workspace_name, stack="", skip_plan=True, webhook=None,
              tfplan=False, pipeline_url=None, job_url=None, limit=None,
              author=None):
     if not tfplan:

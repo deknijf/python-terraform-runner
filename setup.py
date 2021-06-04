@@ -6,7 +6,7 @@ DEPENDENCIES = [
     'argparse'
 ]
 
-VERSION = '0.5'
+VERSION = '0.6'
 URL = 'https://github.com/deknijf/python-terraform-runner'
 
 setup(
